@@ -26,6 +26,8 @@ namespace Template
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //Husk at Tilføje CORS Her eller på Azure Service efter du har published
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +43,9 @@ namespace Template
             }
 
             app.UseHttpsRedirection();
+            // Gør at du kan brug REST Servicen over alt og man bruge all metoder i RESTen
+            // *Note: Man kan sætte en grænse på hvilken metoder der må bruges ved at skrive WithMethods("GET", "PUT");
+            app.UseCors(options => { options.AllowAnyOrigin().AllowAnyMethod(); });
             app.UseMvc();
         }
     }
