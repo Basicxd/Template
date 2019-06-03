@@ -38,9 +38,23 @@ namespace Template.Controllers
         
         // GET: api/Template/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public ActionResult Get(int id)
         {
-            return "value";
+            Customer c = cList.FirstOrDefault(customer => customer.ID == id);
+            if (c == null) return NotFound();
+            return Ok(c);
+
+            Response.StatusCode = (int)HttpStatusCode.OK; //200  The message for the HttpResponse action
+            
+            //or and remember to add Model Classe to return 
+
+
+            Customer c = cList.FirstOrDefault(customer => customer.ID == id);
+          
+            if (c == null) Response.StatusCode = (int)HttpStatusCode.NotFound;
+            
+
+            return c;
         }
 
         // POST: api/Template
@@ -57,6 +71,12 @@ namespace Template.Controllers
                 templateList.Add(addingCoin);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
+
+            //or
+
+            //customer.ID = CustomerController.nextId++;
+            cList.Add(customer);
+            return customer;
         }
 
         // PUT: api/Template/5
@@ -69,6 +89,9 @@ namespace Template.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Customer c = GetCustomer(id);
+            cList.Remove(c);
+            return c;
         }
     }
 }
