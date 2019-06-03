@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +36,6 @@ namespace Template.Controllers
             return templateList;
         }
         
-
-
-
         // GET: api/Template/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
@@ -46,8 +45,18 @@ namespace Template.Controllers
 
         // POST: api/Template
         [HttpPost]
-        public void Post([FromBody] string value)
+        public HttpResponseMessage Post([FromBody] Model.Template value)
         {
+            if (templateList.Contains(value))
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotModified);
+            }
+            else
+            {
+                Model.Template addingCoin = new Model.Template(value.Id, value.Navn);
+                templateList.Add(addingCoin);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
         }
 
         // PUT: api/Template/5

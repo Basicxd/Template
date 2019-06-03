@@ -72,8 +72,20 @@ namespace Template.Controllers
        
         // POST: api/TempDataBase
         [HttpPost]
-        public void Post([FromBody] string value)
+        public HttpResponseMessage Post([FromBody] Model.Template value)
         {
+                const string insertString = "insert into table navn ændre values ændre";
+                using (SqlConnection databaseConnection = new SqlConnection(ConnectionString))
+                {
+                    databaseConnection.Open();
+                    using (SqlCommand insertCommand = new SqlCommand(insertString, databaseConnection))
+                    {
+                        insertCommand.Parameters.AddWithValue("@dato", value.Id);
+                        insertCommand.Parameters.AddWithValue("@tid", value.Navn);
+                        int rowsAffected = insertCommand.ExecuteNonQuery();
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                }
         }
 
         // PUT: api/TempDataBase/5
